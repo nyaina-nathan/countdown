@@ -1,8 +1,8 @@
 import { AppError } from "@/libs/AppError";
 import { generateToken } from "@/libs/jwt";
 import { prisma } from "@/libs/prisma";
-import { RegisterPayload } from "@/types/auth.types";
-import { validateRegisterPayload } from "@/validator/auth.validator";
+import { LoginPayload, RegisterPayload } from "@/types/auth.types";
+import { validateLoginPayload, validateRegisterPayload } from "@/validator/auth.validator";
 import * as bcrypt from 'bcrypt';
 
 export const registerUser = async(
@@ -36,4 +36,41 @@ export const registerUser = async(
     });
 
     return await generateToken(createdUser.id);
+}
+
+export const loginUser = async(
+    loginPayload : LoginPayload
+) => {
+    validateLoginPayload(loginPayload);
+
+    const registeredUser = await prisma.users.findUnique({
+        where : {
+            email : loginPayload.email
+        }
+    });
+
+    if(!registeredUser){
+        throw new AppError(
+            'No account found with this email',
+            'NOT FOUND',
+            404,
+            '/api/auth/login'
+        )
+    }
+
+    const isPasswordValid = bcrypt.compareSync(
+        loginPayload.password,
+        registeredUser.password_hash!
+    )
+
+    if(!isPasswordValid){
+        throw new AppError(
+            'Incorrect password',
+            'UNAUTHORIZED',
+            401,
+            '/api/auth/login'
+        )
+    }
+
+    return await generateToken(registeredUser.id);
 }
