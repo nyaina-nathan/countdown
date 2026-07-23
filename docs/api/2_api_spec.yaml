@@ -1,0 +1,393 @@
+openapi: "3.0.3"
+info:
+  title: Countdown API
+  description: |
+    RESTful API for a countdown application.
+    Users can register, manage their profile, and create/update/delete countdowns.
+  version: "1.0.0"
+
+servers:
+  - url: /api/v1
+    description: API base path
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user account
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, password]
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        "201":
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user, token]
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+                    description: JWT access token
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Authenticate and receive a JWT token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user, token]
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+                    description: JWT access token
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Invalidate the current session / token
+      operationId: logout
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: Logged out successfully
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get the currently authenticated user's profile
+      operationId: getMe
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    delete:
+      tags: [Auth]
+      summary: Permanently delete own account and all associated countdowns
+      operationId: deleteAccount
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: Account deleted successfully
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /countdowns:
+    get:
+      tags: [Countdowns]
+      summary: List all countdowns belonging to the authenticated user
+      operationId: listCountdowns
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-indexed)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        "200":
+          description: Paginated list of countdowns
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, total, page, limit]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Countdown"
+                  total:
+                    type: integer
+                    description: Total number of countdowns for this user
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      tags: [Countdowns]
+      summary: Create a new countdown
+      operationId: createCountdown
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, due_date]
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                due_date:
+                  type: string
+                  format: date-time
+                  description: The target date/time for the countdown
+      responses:
+        "201":
+          description: Countdown created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Countdown"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /countdowns/{id}:
+    get:
+      tags: [Countdowns]
+      summary: Get a single countdown by ID
+      operationId: getCountdown
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Countdown UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Countdown details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Countdown"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Countdowns]
+      summary: Update an existing countdown (partial or full update)
+      operationId: updateCountdown
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Countdown UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                due_date:
+                  type: string
+                  format: date-time
+      responses:
+        "200":
+          description: Updated countdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Countdown"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Countdowns]
+      summary: Delete a countdown
+      operationId: deleteCountdown
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Countdown UUID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Countdown deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      required: [id, username, email, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Countdown:
+      type: object
+      required: [id, id_user, title, due_date, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        id_user:
+          type: string
+          format: uuid
+          description: Owner of the countdown
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    ApiError:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code
+        message:
+          type: string
+          description: Human-readable error description
+
+  responses:
+    BadRequest:
+      description: Invalid request body or parameters
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+
+    Unauthorized:
+      description: Missing or invalid authentication token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+
+    Conflict:
+      description: Resource already exists (e.g. email taken)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
