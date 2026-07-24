@@ -48,6 +48,19 @@ export default function Home() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<FormState>(emptyForm());
   const [tick, setTick] = useState(0);
+  const [username, setUsername] = useState<string | null>(null);
+
+  const fetchMe = async () => {
+    try {
+      const res = await fetch("/api/auth/me");
+      if (res.ok) {
+        const user = await res.json();
+        setUsername(user.username);
+      }
+    } catch {
+      // ignore
+    }
+  };
 
   const fetchCountdowns = async () => {
     setError(null);
@@ -68,6 +81,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    fetchMe();
     fetchCountdowns();
   }, []);
 
@@ -152,6 +166,15 @@ export default function Home() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // ignore
+    }
+    router.push("/login");
+  };
+
   return (
     <main className="relative min-h-screen bg-[#F7F6F3] px-4 py-24 font-sans">
       <div
@@ -159,7 +182,7 @@ export default function Home() {
         className="pointer-events-none fixed inset-0 overflow-hidden"
       >
         <div
-          className="absolute -right-1/4 -top-1/3 h-[800px] w-[800px]"
+          className="absolute -right-1/4 -top-1/3 h-200 w-200"
           style={{
             background:
               'radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%)',
@@ -175,20 +198,30 @@ export default function Home() {
               Your countdowns
             </h1>
             <p className="mt-2 text-sm text-[#787774]">
+              {username && <>{username} &mdash; </>}
               {countdowns.length}{' '}
               {countdowns.length === 1 ? 'countdown' : 'countdowns'}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              setShowCreate((v) => !v);
-              setEditingId(null);
-            }}
-            className="h-fit rounded-md bg-[#111111] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#333333] active:scale-[0.98]"
-          >
-            {showCreate ? 'Cancel' : '+ New countdown'}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setShowCreate((v) => !v);
+                setEditingId(null);
+              }}
+              className="h-fit rounded-md bg-[#111111] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#333333] active:scale-[0.98]"
+            >
+              {showCreate ? 'Cancel' : '+ New countdown'}
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="h-fit rounded-md border border-[#EAEAEA] bg-white px-4 py-2 text-sm font-medium text-[#787774] transition-colors hover:text-[#111111]"
+            >
+              Log out
+            </button>
+          </div>
         </div>
 
         {error && (
@@ -361,7 +394,7 @@ export default function Home() {
                           {c.title}
                         </h3>
                         <span
-                          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-[0.05em] ${
+                          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${
                             t.expired
                               ? 'bg-[#FDEBEC] text-[#9F2F2D]'
                               : 'bg-[#EDF3EC] text-[#346538]'

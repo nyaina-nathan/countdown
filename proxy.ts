@@ -29,6 +29,6 @@ export default proxy;
 
 export const config = {
     matcher: [
-        '/((?!api/auth|_next/static|_next/image|favicon.ico|icon.png).*)',
+        '/((?!api/auth/(?:login|register)|_next/static|_next/image|favicon.ico|icon.png).*)',
     ],
 };

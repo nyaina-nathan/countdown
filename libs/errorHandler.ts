@@ -8,6 +8,9 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<Response>
         try {
             return await handler(...args);
         } catch (e: unknown) {
+
+            console.log(e);
+
             if (e instanceof AppError) {
                 return NextResponse.json(
                     {
