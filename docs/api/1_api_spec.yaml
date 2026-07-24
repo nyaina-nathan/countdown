@@ -4,10 +4,15 @@ info:
   description: |
     RESTful API for a countdown application.
     Users can register, manage their profile, and create/update/delete countdowns.
+
+    **Authentication:** A JWT is stored in an httpOnly cookie named `user_jwt`
+    after login or registration. Protected routes require this cookie. The
+    `proxy.ts` middleware reads the cookie, verifies the JWT, and injects an
+    `x-user-id` header into the request for downstream route handlers.
   version: "1.0.0"
 
 servers:
-  - url: /api/v1
+  - url: /api
     description: API base path
 
 paths:
@@ -31,28 +36,28 @@ paths:
                   format: email
                 password:
                   type: string
-                  minLength: 6
+                  minLength: 8
       responses:
         "201":
           description: Account created successfully
           content:
             application/json:
               schema:
-                type: object
-                required: [user, token]
-                properties:
-                  user:
-                    $ref: "#/components/schemas/User"
-                  token:
-                    type: string
-                    description: JWT access token
+                $ref: "#/components/schemas/MessageResponse"
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: "`user_jwt` httpOnly cookie (maxAge: 24h)"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "409":
           $ref: "#/components/responses/Conflict"
 
   /auth/login:
     post:
       tags: [Auth]
-      summary: Authenticate and receive a JWT token
+      summary: Authenticate and receive a JWT cookie
       operationId: login
       requestBody:
         required: true
@@ -72,27 +77,35 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: [user, token]
-                properties:
-                  user:
-                    $ref: "#/components/schemas/User"
-                  token:
-                    type: string
-                    description: JWT access token
+                $ref: "#/components/schemas/MessageResponse"
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: "`user_jwt` httpOnly cookie (maxAge: 24h)"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /auth/logout:
     post:
       tags: [Auth]
-      summary: Invalidate the current session / token
+      summary: Clear the session cookie
       operationId: logout
-      security:
-        - BearerAuth: []
       responses:
-        "204":
+        "200":
           description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 204
         "401":
           $ref: "#/components/responses/Unauthorized"
 
@@ -101,8 +114,14 @@ paths:
       tags: [Auth]
       summary: Get the currently authenticated user's profile
       operationId: getMe
-      security:
-        - BearerAuth: []
+      parameters:
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: User profile
@@ -117,57 +136,48 @@ paths:
       tags: [Auth]
       summary: Permanently delete own account and all associated countdowns
       operationId: deleteAccount
-      security:
-        - BearerAuth: []
+      parameters:
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
       responses:
         "204":
-          description: Account deleted successfully
+          description: Account deleted successfully (clears user_jwt cookie)
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /countdowns:
     get:
       tags: [Countdowns]
       summary: List all countdowns belonging to the authenticated user
       operationId: listCountdowns
-      security:
-        - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          description: Page number (1-indexed)
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
           schema:
-            type: integer
-            default: 1
-            minimum: 1
-        - name: limit
-          in: query
-          description: Number of items per page
-          schema:
-            type: integer
-            default: 20
-            minimum: 1
-            maximum: 100
+            type: string
+            format: uuid
       responses:
         "200":
-          description: Paginated list of countdowns
+          description: List of countdowns (ordered by due_date ascending)
           content:
             application/json:
               schema:
                 type: object
-                required: [data, total, page, limit]
+                required: [data]
                 properties:
                   data:
                     type: array
                     items:
                       $ref: "#/components/schemas/Countdown"
-                  total:
-                    type: integer
-                    description: Total number of countdowns for this user
-                  page:
-                    type: integer
-                  limit:
-                    type: integer
         "401":
           $ref: "#/components/responses/Unauthorized"
 
@@ -175,8 +185,14 @@ paths:
       tags: [Countdowns]
       summary: Create a new countdown
       operationId: createCountdown
-      security:
-        - BearerAuth: []
+      parameters:
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -193,14 +209,21 @@ paths:
                 due_date:
                   type: string
                   format: date-time
-                  description: The target date/time for the countdown
+                  description: The target date/time for the countdown (must be in the future)
       responses:
         "201":
           description: Countdown created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Countdown"
+                type: object
+                required: [message, data]
+                properties:
+                  message:
+                    type: string
+                    example: "Countdown created"
+                  data:
+                    $ref: "#/components/schemas/Countdown"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -211,13 +234,18 @@ paths:
       tags: [Countdowns]
       summary: Get a single countdown by ID
       operationId: getCountdown
-      security:
-        - BearerAuth: []
       parameters:
         - name: id
           in: path
           required: true
           description: Countdown UUID
+          schema:
+            type: string
+            format: uuid
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
           schema:
             type: string
             format: uuid
@@ -227,7 +255,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Countdown"
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Countdown"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
@@ -237,13 +269,18 @@ paths:
       tags: [Countdowns]
       summary: Update an existing countdown (partial or full update)
       operationId: updateCountdown
-      security:
-        - BearerAuth: []
       parameters:
         - name: id
           in: path
           required: true
           description: Countdown UUID
+          schema:
+            type: string
+            format: uuid
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
           schema:
             type: string
             format: uuid
@@ -269,7 +306,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Countdown"
+                type: object
+                required: [message, data]
+                properties:
+                  message:
+                    type: string
+                    example: "Countdown updated"
+                  data:
+                    $ref: "#/components/schemas/Countdown"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -281,8 +325,6 @@ paths:
       tags: [Countdowns]
       summary: Delete a countdown
       operationId: deleteCountdown
-      security:
-        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -291,22 +333,39 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
       responses:
-        "204":
+        "200":
           description: Countdown deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Countdown deleted"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
 
 components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
   schemas:
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          description: Human-readable status message
+
     User:
       type: object
       required: [id, username, email, created_at]
@@ -354,11 +413,21 @@ components:
 
     ApiError:
       type: object
-      required: [error, message]
+      required: [title, status, origin, timestamp, message]
       properties:
-        error:
+        title:
           type: string
-          description: Machine-readable error code
+          description: Machine-readable error code (e.g. "BAD REQUEST", "UNAUTHORIZED")
+        status:
+          type: integer
+          description: HTTP status code
+        origin:
+          type: string
+          description: Route path where the error originated
+        timestamp:
+          type: string
+          format: date-time
+          description: When the error occurred
         message:
           type: string
           description: Human-readable error description
@@ -372,7 +441,7 @@ components:
             $ref: "#/components/schemas/ApiError"
 
     Unauthorized:
-      description: Missing or invalid authentication token
+      description: Missing, invalid, or expired authentication
       content:
         application/json:
           schema:
