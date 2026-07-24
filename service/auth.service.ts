@@ -74,3 +74,47 @@ export const loginUser = async(
 
     return await generateToken(registeredUser.id);
 }
+
+export const getUserById = async (userId: string) => {
+    const user = await prisma.users.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            username: true,
+            email: true,
+            created_at: true,
+            updated_at: true,
+        },
+    });
+
+    if (!user) {
+        throw new AppError(
+            'User not found',
+            'NOT FOUND',
+            404,
+            '/api/auth/me'
+        );
+    }
+
+    return user;
+};
+
+export const deleteAccount = async (userId: string) => {
+    const user = await prisma.users.findUnique({
+        where: { id: userId },
+        select: { id: true },
+    });
+
+    if (!user) {
+        throw new AppError(
+            'User not found',
+            'NOT FOUND',
+            404,
+            '/api/auth/me'
+        );
+    }
+
+    await prisma.users.delete({
+        where: { id: userId },
+    });
+};
