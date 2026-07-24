@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { AppError } from "./AppError";
 
-type Handler = (req : NextRequest , ...ctx : unknown[]) => Promise<NextResponse>
-
-export const withErrorHandler = (handler: Handler) => {
-    return async (req: NextRequest, ...ctx: unknown[]) => {
+export function withErrorHandler<T extends (...args: any[]) => Promise<Response>>(
+  handler: T
+): T {
+    return (async (...args: Parameters<T>) => {  
         try {
-            return await handler(req, ctx);
+            return await handler(...args);
         } catch (e: unknown) {
             if (e instanceof AppError) {
                 return NextResponse.json(
@@ -49,5 +49,5 @@ export const withErrorHandler = (handler: Handler) => {
                 }
             );
         }
-    };
+    }) as T;
 };
