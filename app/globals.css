@@ -1,9 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'SF Pro Display', 'Geist Sans', 'Helvetica Neue', 'Switzer', sans-serif;
-  --font-serif: 'Newsreader', 'Playfair Display', 'Instrument Serif', serif;
-  --font-mono: 'Geist Mono', 'SF Mono', 'JetBrains Mono', monospace;
+  --font-sans: var(--font-vt323), monospace;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', monospace;
+
+  --color-primary: #4502FF;
+  --color-secondary: #FFDA14;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+  --color-surface: #FFFFFF;
+  --color-ink: #111827;
+
+  --shadow-sega: 4px 4px 0px #111827;
+  --shadow-sega-sm: 2px 2px 0px #111827;
 }
 
 @keyframes fade-up {
@@ -14,5 +24,155 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 2px 2px 0px #4502FF, 4px 4px 0px #FFDA14; }
+  50% { box-shadow: 3px 3px 0px #4502FF, 6px 6px 0px #FFDA14; }
+}
+
+.btn-sega {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-vt323, VT323, monospace);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 9999px;
+  padding: 12px 24px;
+  font-size: 1.0625rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 75ms ease-out;
+  box-shadow: 4px 4px 0px #111827;
+  border: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-sega:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #111827;
+}
+
+.btn-sega:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-sega:focus-visible {
+  outline: 3px solid #4502FF;
+  outline-offset: 2px;
+}
+
+.btn-sega--sm {
+  font-size: 0.9375rem;
+  padding: 8px 16px;
+  box-shadow: 2px 2px 0px #111827;
+}
+
+.btn-sega--sm:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #111827;
+}
+
+.card-sega {
+  background: #FFFFFF;
+  border: 2px solid #111827;
+  border-radius: 0px;
+  padding: 1.5rem;
+  box-shadow: 2px 2px 0px #4502FF, 4px 4px 0px #FFDA14;
+}
+
+@media (min-width: 768px) {
+  .card-sega {
+    box-shadow: 4px 4px 0px #4502FF, 8px 8px 0px #FFDA14;
+  }
+}
+
+.input-sega {
+  width: 100%;
+  background: #FFFFFF;
+  border: 2px solid #111827;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-family: var(--font-vt323, VT323, monospace);
+  font-size: 1.0625rem;
+  color: #111827;
+  transition: box-shadow 75ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.input-sega::placeholder {
+  color: #6B7280;
+}
+
+.input-sega:focus {
+  outline: none;
+  box-shadow: 3px 3px 0px #4502FF;
+  border-color: #4502FF;
+}
+
+.input-sega:focus-visible {
+  outline: 3px solid #4502FF;
+  outline-offset: 2px;
+}
+
+.label-sega {
+  display: block;
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.badge-sega {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-family: var(--font-vt323, VT323, monospace);
+  font-size: 1.0625rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border: 2px solid #111827;
+  white-space: nowrap;
+}
+
+.link-sega {
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: #4502FF;
+  text-underline-offset: 2px;
+  transition: color 75ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.link-sega:hover {
+  color: #111827;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-sega,
+  .card-sega {
+    transition: none;
+    animation: none;
+  }
+
+  .btn-sega:active:not(:disabled) {
+    transform: none;
+    box-shadow: 4px 4px 0px #111827;
+  }
+
+  .btn-sega--sm:active:not(:disabled) {
+    transform: none;
+    box-shadow: 2px 2px 0px #111827;
   }
 }

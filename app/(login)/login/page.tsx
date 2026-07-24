@@ -81,34 +81,18 @@ const LoginPage = () => {
     const isRegister = mode === 'register';
 
     return (
-        <main className="relative flex min-h-screen items-center justify-center bg-[#F7F6F3] px-4 py-24 font-sans">
+        <main className="flex flex-1 items-center justify-center px-4 py-12">
             <div
-                aria-hidden="true"
-                className="pointer-events-none fixed inset-0 overflow-hidden"
+                className="card-sega w-full max-w-md"
+                style={{ animation: 'fade-up 0.6s cubic-bezier(0.16,1,0.3,1)' }}
             >
-                <div
-                    className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] animate-pulse rounded-full"
-                    style={{
-                        background:
-                            'radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%)',
-                        animationDuration: '25s',
-                    }}
-                />
-            </div>
-
-            <div
-                className="w-full max-w-md animate-[fade-up_0.6s_cubic-bezier(0.16,1,0.3,1)] rounded-xl border border-[#EAEAEA] bg-white p-8"
-            >
-                <h1 className="mb-8 text-center font-serif text-3xl tracking-[-0.02em] leading-[1.1] text-[#111111]">
+                <h1 className="mb-8 text-center font-sans text-[2.1875rem] leading-none">
                     {isRegister ? 'Create account' : 'Log in'}
                 </h1>
 
                 <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                    <div className="space-y-1.5">
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium text-[#787774]"
-                        >
+                    <div>
+                        <label htmlFor="email" className="label-sega">
                             Email
                         </label>
                         <input
@@ -119,16 +103,13 @@ const LoginPage = () => {
                             autoFocus
                             autoComplete="email"
                             placeholder="you@example.com"
-                            className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2.5 text-[#111111] placeholder:text-[#787774] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                            className="input-sega"
                         />
                     </div>
 
                     {isRegister && (
-                        <div className="space-y-1.5">
-                            <label
-                                htmlFor="username"
-                                className="block text-sm font-medium text-[#787774]"
-                            >
+                        <div>
+                            <label htmlFor="username" className="label-sega">
                                 Username
                             </label>
                             <input
@@ -138,16 +119,13 @@ const LoginPage = () => {
                                 onChange={(e) => setUsername(e.target.value)}
                                 autoComplete="username"
                                 placeholder="yourname"
-                                className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2.5 text-[#111111] placeholder:text-[#787774] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                                className="input-sega"
                             />
                         </div>
                     )}
 
-                    <div className="space-y-1.5">
-                        <label
-                            htmlFor="password"
-                            className="block text-sm font-medium text-[#787774]"
-                        >
+                    <div>
+                        <label htmlFor="password" className="label-sega">
                             Password
                         </label>
                         <input
@@ -157,12 +135,12 @@ const LoginPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             autoComplete={isRegister ? 'new-password' : 'current-password'}
                             placeholder={String.fromCharCode(0x2022).repeat(8)}
-                            className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2.5 text-[#111111] placeholder:text-[#787774] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                            className="input-sega"
                         />
                     </div>
 
                     {error && (
-                        <p className="rounded-md bg-[#FDEBEC] px-3 py-2 text-sm text-[#9F2F2D]">
+                        <p className="badge-sega bg-danger text-white text-sm w-full justify-center">
                             {error}
                         </p>
                     )}
@@ -170,26 +148,26 @@ const LoginPage = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full rounded-md bg-[#111111] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#333333] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="btn-sega w-full bg-primary text-white"
                     >
                         {loading
                             ? isRegister
-                                ? 'Creating account\u2026'
-                                : 'Logging in\u2026'
+                                ? 'Creating account...'
+                                : 'Logging in...'
                             : isRegister
                                 ? 'Sign up'
                                 : 'Log in'}
                     </button>
                 </form>
 
-                <p className="mt-8 text-center text-sm text-[#787774]">
+                <p className="mt-8 text-center font-mono text-xs uppercase tracking-widest text-[#6B7280]">
                     {isRegister ? (
                         <>
                             Already have an account?{' '}
                             <button
                                 type="button"
                                 onClick={() => switchMode('login')}
-                                className="font-medium text-[#111111] underline-offset-2 hover:underline"
+                                className="link-sega"
                             >
                                 Log in
                             </button>
@@ -200,7 +178,7 @@ const LoginPage = () => {
                             <button
                                 type="button"
                                 onClick={() => switchMode('register')}
-                                className="font-medium text-[#111111] underline-offset-2 hover:underline"
+                                className="link-sega"
                             >
                                 Sign up
                             </button>

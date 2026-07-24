@@ -176,56 +176,42 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#F7F6F3] px-4 py-24 font-sans">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 overflow-hidden"
-      >
-        <div
-          className="absolute -right-1/4 -top-1/3 h-200 w-200"
-          style={{
-            background:
-              'radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%)',
-            animation: 'pulse 30s ease-in-out infinite',
-          }}
-        />
-      </div>
-
+    <main className="flex-1 px-4 py-8 md:px-8 md:py-12">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-12 flex items-end justify-between">
+        <header className="mb-8 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="font-serif text-4xl tracking-[-0.03em] leading-[1.1] text-[#111111]">
+            <h1 className="font-sans text-[2.1875rem] leading-none md:text-[2.1875rem]">
               Your countdowns
             </h1>
-            <p className="mt-2 text-sm text-[#787774]">
+            <p className="mt-1 font-mono text-xs uppercase tracking-widest text-[#6B7280]">
               {username && <>{username} &mdash; </>}
               {countdowns.length}{' '}
               {countdowns.length === 1 ? 'countdown' : 'countdowns'}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
               onClick={() => {
                 setShowCreate((v) => !v);
                 setEditingId(null);
               }}
-              className="h-fit rounded-md bg-[#111111] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#333333] active:scale-[0.98]"
+              className="btn-sega bg-primary text-white"
             >
               {showCreate ? 'Cancel' : '+ New countdown'}
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="h-fit rounded-md border border-[#EAEAEA] bg-white px-4 py-2 text-sm font-medium text-[#787774] transition-colors hover:text-[#111111]"
+              className="btn-sega bg-secondary text-ink"
             >
               Log out
             </button>
           </div>
-        </div>
+        </header>
 
         {error && (
-          <p className="mb-8 rounded-md bg-[#FDEBEC] px-4 py-3 text-sm text-[#9F2F2D]">
+          <p className="mb-8 badge-sega bg-danger text-white text-sm">
             {error}
           </p>
         )}
@@ -233,17 +219,15 @@ export default function Home() {
         {showCreate && (
           <form
             onSubmit={handleCreate}
-            className="mb-10 animate-[fade-up_0.4s_cubic-bezier(0.16,1,0.3,1)] rounded-xl border border-[#EAEAEA] bg-white p-6"
+            className="card-sega mb-10"
+            style={{ animation: 'fade-up 0.4s cubic-bezier(0.16,1,0.3,1)' }}
           >
-            <h2 className="mb-5 font-serif text-xl tracking-[-0.02em] text-[#111111]">
+            <h2 className="mb-6 font-sans text-[1.6875rem] leading-none">
               New countdown
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label
-                  htmlFor="create-title"
-                  className="mb-1 block text-sm text-[#787774]"
-                >
+                <label htmlFor="create-title" className="label-sega">
                   Title
                 </label>
                 <input
@@ -254,14 +238,11 @@ export default function Home() {
                     setCreateForm((f) => ({ ...f, title: e.target.value }))
                   }
                   placeholder="What are you counting down to?"
-                  className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[#111111] placeholder:text-[#787774] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  className="input-sega"
                 />
               </div>
               <div>
-                <label
-                  htmlFor="create-description"
-                  className="mb-1 block text-sm text-[#787774]"
-                >
+                <label htmlFor="create-description" className="label-sega">
                   Description
                 </label>
                 <textarea
@@ -271,15 +252,12 @@ export default function Home() {
                   onChange={(e) =>
                     setCreateForm((f) => ({ ...f, description: e.target.value }))
                   }
-                  placeholder="Optional details\u2026"
-                  className="w-full resize-none rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[#111111] placeholder:text-[#787774] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  placeholder="Optional details..."
+                  className="input-sega resize-none"
                 />
               </div>
               <div>
-                <label
-                  htmlFor="create-due"
-                  className="mb-1 block text-sm text-[#787774]"
-                >
+                <label htmlFor="create-due" className="label-sega">
                   Due date
                 </label>
                 <input
@@ -289,14 +267,14 @@ export default function Home() {
                   onChange={(e) =>
                     setCreateForm((f) => ({ ...f, due_date: e.target.value }))
                   }
-                  className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[#111111] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  className="input-sega"
                 />
               </div>
             </div>
             <button
               type="submit"
               disabled={!createForm.title.trim() || !createForm.due_date}
-              className="mt-5 rounded-md bg-[#111111] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#333333] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn-sega mt-6 bg-primary text-white"
             >
               Create countdown
             </button>
@@ -304,21 +282,26 @@ export default function Home() {
         )}
 
         {loading ? (
-          <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-24 animate-pulse rounded-xl border border-[#EAEAEA] bg-white"
-              />
+                className="card-sega"
+                style={{ animation: 'glow-pulse 2s ease-in-out infinite' }}
+              >
+                <div className="h-5 w-2/3 rounded bg-[#E5E7EB]" />
+                <div className="mt-3 h-4 w-1/3 rounded bg-[#E5E7EB]" />
+                <div className="mt-4 h-3 w-1/4 rounded bg-[#E5E7EB]" />
+              </div>
             ))}
           </div>
         ) : countdowns.length === 0 ? (
-          <div className="mt-16 text-center">
-            <p className="text-lg text-[#787774]">
+          <div className="card-sega mt-8 text-center md:mt-16">
+            <p className="font-sans text-[1.6875rem] leading-none">
               No countdowns yet.
             </p>
-            <p className="mt-1 text-sm text-[#787774]">
-              Click &quot;+ New countdown&quot; to get started.
+            <p className="mt-2 font-mono text-xs uppercase tracking-widest text-[#6B7280]">
+              Click &ldquo;+ New countdown&rdquo; to get started.
             </p>
           </div>
         ) : (
@@ -329,18 +312,22 @@ export default function Home() {
               return (
                 <div
                   key={c.id}
-                  className="animate-[fade-up_0.6s_cubic-bezier(0.16,1,0.3,1)] rounded-xl border border-[#EAEAEA] bg-white p-6 transition-shadow duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-                  style={{ animationDelay: `${i * 80}ms` }}
+                  className="card-sega"
+                  style={{
+                    animation: 'fade-up 0.6s cubic-bezier(0.16,1,0.3,1)',
+                    animationDelay: `${i * 80}ms`,
+                    animationFillMode: 'both',
+                  }}
                 >
                   {isEditing ? (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <input
                         type="text"
                         value={editForm.title}
                         onChange={(e) =>
                           setEditForm((f) => ({ ...f, title: e.target.value }))
                         }
-                        className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[#111111] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                        className="input-sega"
                       />
                       <textarea
                         rows={2}
@@ -351,7 +338,7 @@ export default function Home() {
                             description: e.target.value,
                           }))
                         }
-                        className="w-full resize-none rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-sm text-[#111111] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                        className="input-sega resize-none"
                       />
                       <input
                         type="datetime-local"
@@ -362,7 +349,7 @@ export default function Home() {
                             due_date: e.target.value,
                           }))
                         }
-                        className="w-full rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-sm text-[#111111] focus:border-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                        className="input-sega"
                       />
                       <div className="flex gap-2">
                         <button
@@ -371,7 +358,7 @@ export default function Home() {
                           disabled={
                             !editForm.title.trim() || !editForm.due_date
                           }
-                          className="rounded-md bg-[#111111] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#333333] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                          className="btn-sega btn-sega--sm bg-primary text-white"
                         >
                           Save
                         </button>
@@ -381,7 +368,8 @@ export default function Home() {
                             setEditingId(null);
                             setEditForm(emptyForm());
                           }}
-                          className="rounded-md border border-[#EAEAEA] bg-white px-3 py-1.5 text-xs font-medium text-[#787774] transition-colors hover:text-[#111111]"
+                          className="btn-sega btn-sega--sm bg-white text-ink"
+                          style={{ boxShadow: '2px 2px 0px #111827' }}
                         >
                           Cancel
                         </button>
@@ -389,15 +377,15 @@ export default function Home() {
                     </div>
                   ) : (
                     <>
-                      <div className="mb-3 flex items-start justify-between gap-4">
-                        <h3 className="text-lg font-medium text-[#111111]">
+                      <div className="mb-4 flex items-start justify-between gap-4">
+                        <h3 className="font-sans text-[1.3125rem] leading-tight md:text-[1.6875rem]">
                           {c.title}
                         </h3>
                         <span
-                          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider ${
+                          className={`badge-sega shrink-0 ${
                             t.expired
-                              ? 'bg-[#FDEBEC] text-[#9F2F2D]'
-                              : 'bg-[#EDF3EC] text-[#346538]'
+                              ? 'bg-danger text-white'
+                              : 'bg-success text-white'
                           }`}
                         >
                           {t.expired
@@ -406,7 +394,7 @@ export default function Home() {
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-3 text-xs text-[#787774]">
+                      <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-[#6B7280]">
                         <button
                           type="button"
                           onClick={() =>
@@ -414,9 +402,9 @@ export default function Home() {
                               expandedId === c.id ? null : c.id,
                             )
                           }
-                          className="flex items-center gap-1 transition-colors hover:text-[#111111]"
+                          className="link-sega flex items-center gap-1"
                         >
-                          <span className="text-sm leading-none">
+                          <span className="text-base leading-none">
                             {expandedId === c.id ? '\u2212' : '+'}
                           </span>
                           Details
@@ -424,27 +412,28 @@ export default function Home() {
                         <button
                           type="button"
                           onClick={() => startEdit(c)}
-                          className="transition-colors hover:text-[#111111]"
+                          className="link-sega"
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(c.id)}
-                          className="transition-colors hover:text-[#9F2F2D]"
+                          className="font-mono text-xs uppercase tracking-widest text-danger underline-offset-2 hover:underline"
+                          style={{ fontFamily: 'var(--font-jetbrains), JetBrains Mono, monospace' }}
                         >
                           Delete
                         </button>
                       </div>
 
                       {expandedId === c.id && (
-                        <div className="mt-3 animate-[fade-up_0.3s_cubic-bezier(0.16,1,0.3,1)] border-t border-[#EAEAEA] pt-3">
-                          <p className="text-sm leading-relaxed text-[#787774]">
+                        <div className="mt-4 border-t-2 border-ink pt-4">
+                          <p className="font-sans text-[1.0625rem] leading-snug text-[#4B5563]">
                             {c.description || (
-                              <span className="italic">No description</span>
+                              <span className="italic opacity-60">No description</span>
                             )}
                           </p>
-                          <p className="mt-2 text-xs text-[#787774]">
+                          <p className="mt-2 font-mono text-xs uppercase tracking-widest text-[#6B7280]">
                             Due{' '}
                             {new Date(c.due_date).toLocaleDateString('en-US', {
                               weekday: 'short',
