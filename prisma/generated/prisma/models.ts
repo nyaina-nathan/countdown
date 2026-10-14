@@ -10,4 +10,5 @@
  */
 export type * from './models/countdowns'
 export type * from './models/users'
+export type * from './models/wins'
 export type * from './commonInputTypes'

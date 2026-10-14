@@ -191,6 +191,7 @@ export type usersWhereInput = {
   created_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null
   updated_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null
   countdowns?: Prisma.CountdownsListRelationFilter
+  wins?: Prisma.WinsListRelationFilter
 }
 
 export type usersOrderByWithRelationInput = {
@@ -201,6 +202,7 @@ export type usersOrderByWithRelationInput = {
   created_at?: Prisma.SortOrderInput | Prisma.SortOrder
   updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
   countdowns?: Prisma.countdownsOrderByRelationAggregateInput
+  wins?: Prisma.winsOrderByRelationAggregateInput
 }
 
 export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -214,6 +216,7 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null
   updated_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null
   countdowns?: Prisma.CountdownsListRelationFilter
+  wins?: Prisma.WinsListRelationFilter
 }, "id" | "email">
 
 export type usersOrderByWithAggregationInput = {
@@ -248,6 +251,7 @@ export type usersCreateInput = {
   created_at?: Date | string | null
   updated_at?: Date | string | null
   countdowns?: Prisma.countdownsCreateNestedManyWithoutUsersInput
+  wins?: Prisma.winsCreateNestedManyWithoutUsersInput
 }
 
 export type usersUncheckedCreateInput = {
@@ -258,6 +262,7 @@ export type usersUncheckedCreateInput = {
   created_at?: Date | string | null
   updated_at?: Date | string | null
   countdowns?: Prisma.countdownsUncheckedCreateNestedManyWithoutUsersInput
+  wins?: Prisma.winsUncheckedCreateNestedManyWithoutUsersInput
 }
 
 export type usersUpdateInput = {
@@ -268,6 +273,7 @@ export type usersUpdateInput = {
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   countdowns?: Prisma.countdownsUpdateManyWithoutUsersNestedInput
+  wins?: Prisma.winsUpdateManyWithoutUsersNestedInput
 }
 
 export type usersUncheckedUpdateInput = {
@@ -278,6 +284,7 @@ export type usersUncheckedUpdateInput = {
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   countdowns?: Prisma.countdownsUncheckedUpdateManyWithoutUsersNestedInput
+  wins?: Prisma.winsUncheckedUpdateManyWithoutUsersNestedInput
 }
 
 export type usersCreateManyInput = {
@@ -353,6 +360,20 @@ export type usersUpdateOneRequiredWithoutCountdownsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutCountdownsInput, Prisma.usersUpdateWithoutCountdownsInput>, Prisma.usersUncheckedUpdateWithoutCountdownsInput>
 }
 
+export type usersCreateNestedOneWithoutWinsInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutWinsInput, Prisma.usersUncheckedCreateWithoutWinsInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutWinsInput
+  connect?: Prisma.usersWhereUniqueInput
+}
+
+export type usersUpdateOneRequiredWithoutWinsNestedInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutWinsInput, Prisma.usersUncheckedCreateWithoutWinsInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutWinsInput
+  upsert?: Prisma.usersUpsertWithoutWinsInput
+  connect?: Prisma.usersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutWinsInput, Prisma.usersUpdateWithoutWinsInput>, Prisma.usersUncheckedUpdateWithoutWinsInput>
+}
+
 export type usersCreateWithoutCountdownsInput = {
   id?: string
   username: string
@@ -360,6 +381,7 @@ export type usersCreateWithoutCountdownsInput = {
   password_hash?: string | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
+  wins?: Prisma.winsCreateNestedManyWithoutUsersInput
 }
 
 export type usersUncheckedCreateWithoutCountdownsInput = {
@@ -369,6 +391,7 @@ export type usersUncheckedCreateWithoutCountdownsInput = {
   password_hash?: string | null
   created_at?: Date | string | null
   updated_at?: Date | string | null
+  wins?: Prisma.winsUncheckedCreateNestedManyWithoutUsersInput
 }
 
 export type usersCreateOrConnectWithoutCountdownsInput = {
@@ -394,6 +417,7 @@ export type usersUpdateWithoutCountdownsInput = {
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  wins?: Prisma.winsUpdateManyWithoutUsersNestedInput
 }
 
 export type usersUncheckedUpdateWithoutCountdownsInput = {
@@ -403,6 +427,63 @@ export type usersUncheckedUpdateWithoutCountdownsInput = {
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  wins?: Prisma.winsUncheckedUpdateManyWithoutUsersNestedInput
+}
+
+export type usersCreateWithoutWinsInput = {
+  id?: string
+  username: string
+  email: string
+  password_hash?: string | null
+  created_at?: Date | string | null
+  updated_at?: Date | string | null
+  countdowns?: Prisma.countdownsCreateNestedManyWithoutUsersInput
+}
+
+export type usersUncheckedCreateWithoutWinsInput = {
+  id?: string
+  username: string
+  email: string
+  password_hash?: string | null
+  created_at?: Date | string | null
+  updated_at?: Date | string | null
+  countdowns?: Prisma.countdownsUncheckedCreateNestedManyWithoutUsersInput
+}
+
+export type usersCreateOrConnectWithoutWinsInput = {
+  where: Prisma.usersWhereUniqueInput
+  create: Prisma.XOR<Prisma.usersCreateWithoutWinsInput, Prisma.usersUncheckedCreateWithoutWinsInput>
+}
+
+export type usersUpsertWithoutWinsInput = {
+  update: Prisma.XOR<Prisma.usersUpdateWithoutWinsInput, Prisma.usersUncheckedUpdateWithoutWinsInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutWinsInput, Prisma.usersUncheckedCreateWithoutWinsInput>
+  where?: Prisma.usersWhereInput
+}
+
+export type usersUpdateToOneWithWhereWithoutWinsInput = {
+  where?: Prisma.usersWhereInput
+  data: Prisma.XOR<Prisma.usersUpdateWithoutWinsInput, Prisma.usersUncheckedUpdateWithoutWinsInput>
+}
+
+export type usersUpdateWithoutWinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  countdowns?: Prisma.countdownsUpdateManyWithoutUsersNestedInput
+}
+
+export type usersUncheckedUpdateWithoutWinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  countdowns?: Prisma.countdownsUncheckedUpdateManyWithoutUsersNestedInput
 }
 
 
@@ -412,10 +493,12 @@ export type usersUncheckedUpdateWithoutCountdownsInput = {
 
 export type UsersCountOutputType = {
   countdowns: number
+  wins: number
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   countdowns?: boolean | UsersCountOutputTypeCountCountdownsArgs
+  wins?: boolean | UsersCountOutputTypeCountWinsArgs
 }
 
 /**
@@ -435,6 +518,13 @@ export type UsersCountOutputTypeCountCountdownsArgs<ExtArgs extends runtime.Type
   where?: Prisma.countdownsWhereInput
 }
 
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountWinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.winsWhereInput
+}
+
 
 export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -444,6 +534,7 @@ export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   created_at?: boolean
   updated_at?: boolean
   countdowns?: boolean | Prisma.users$countdownsArgs<ExtArgs>
+  wins?: boolean | Prisma.users$winsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -477,6 +568,7 @@ export type usersSelectScalar = {
 export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "email" | "password_hash" | "created_at" | "updated_at", ExtArgs["result"]["users"]>
 export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   countdowns?: boolean | Prisma.users$countdownsArgs<ExtArgs>
+  wins?: boolean | Prisma.users$winsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type usersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -486,6 +578,7 @@ export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "users"
   objects: {
     countdowns: Prisma.$countdownsPayload<ExtArgs>[]
+    wins: Prisma.$winsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -889,6 +982,7 @@ readonly fields: usersFieldRefs;
 export interface Prisma__usersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   countdowns<T extends Prisma.users$countdownsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$countdownsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$countdownsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  wins<T extends Prisma.users$winsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$winsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$winsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1338,6 +1432,30 @@ export type users$countdownsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.CountdownsScalarFieldEnum | Prisma.CountdownsScalarFieldEnum[]
+}
+
+/**
+ * users.wins
+ */
+export type users$winsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the wins
+   */
+  select?: Prisma.winsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the wins
+   */
+  omit?: Prisma.winsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.winsInclude<ExtArgs> | null
+  where?: Prisma.winsWhereInput
+  orderBy?: Prisma.winsOrderByWithRelationInput | Prisma.winsOrderByWithRelationInput[]
+  cursor?: Prisma.winsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WinsScalarFieldEnum | Prisma.WinsScalarFieldEnum[]
 }
 
 /**

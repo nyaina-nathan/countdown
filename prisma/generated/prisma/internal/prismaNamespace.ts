@@ -398,7 +398,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   countdowns: 'countdowns',
-  users: 'users'
+  users: 'users',
+  wins: 'wins'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "countdowns" | "users"
+    modelProps: "countdowns" | "users" | "wins"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +567,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    wins: {
+      payload: Prisma.$winsPayload<ExtArgs>
+      fields: Prisma.winsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.winsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.winsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>
+        }
+        findFirst: {
+          args: Prisma.winsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.winsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>
+        }
+        findMany: {
+          args: Prisma.winsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>[]
+        }
+        create: {
+          args: Prisma.winsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>
+        }
+        createMany: {
+          args: Prisma.winsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.winsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>[]
+        }
+        delete: {
+          args: Prisma.winsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>
+        }
+        update: {
+          args: Prisma.winsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>
+        }
+        deleteMany: {
+          args: Prisma.winsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.winsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.winsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>[]
+        }
+        upsert: {
+          args: Prisma.winsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$winsPayload>
+        }
+        aggregate: {
+          args: Prisma.WinsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWins>
+        }
+        groupBy: {
+          args: Prisma.winsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WinsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.winsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WinsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -627,6 +702,17 @@ export const UsersScalarFieldEnum = {
 } as const
 
 export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
+
+
+export const WinsScalarFieldEnum = {
+  id: 'id',
+  id_user: 'id_user',
+  title: 'title',
+  description: 'description',
+  created_at: 'created_at'
+} as const
+
+export type WinsScalarFieldEnum = (typeof WinsScalarFieldEnum)[keyof typeof WinsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -853,6 +939,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   countdowns?: Prisma.countdownsOmit
   users?: Prisma.usersOmit
+  wins?: Prisma.winsOmit
 }
 
 /* Types for Logging */
