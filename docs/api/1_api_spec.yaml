@@ -356,6 +356,240 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /wins:
+    get:
+      tags: [Wins]
+      summary: List all wins belonging to the authenticated user
+      operationId: listWins
+      parameters:
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
+        - name: page
+          in: query
+          required: false
+          description: Page number (1-based). Defaults to 1.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: perPage
+          in: query
+          required: false
+          description: Number of wins per page. Defaults to 10, max 100.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        "200":
+          description: Paginated list of wins (ordered by created_at descending, newest first)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [meta, data]
+                properties:
+                  meta:
+                    type: object
+                    required: [page, perPage, total, totalPage]
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      perPage:
+                        type: integer
+                        example: 10
+                      total:
+                        type: integer
+                        description: Total number of wins for the user
+                        example: 42
+                      totalPage:
+                        type: integer
+                        description: Total number of pages (ceil(total / perPage))
+                        example: 5
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Win"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      tags: [Wins]
+      summary: Create a new win
+      operationId: createWin
+      parameters:
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+      responses:
+        "201":
+          description: Win created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message, data]
+                properties:
+                  message:
+                    type: string
+                    example: "Win created"
+                  data:
+                    $ref: "#/components/schemas/Win"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /wins/{id}:
+    get:
+      tags: [Wins]
+      summary: Get a single win by ID
+      operationId: getWin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Win UUID
+          schema:
+            type: string
+            format: uuid
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Win details
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Win"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Wins]
+      summary: Update an existing win (partial or full update)
+      operationId: updateWin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Win UUID
+          schema:
+            type: string
+            format: uuid
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+      responses:
+        "200":
+          description: Updated win
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message, data]
+                properties:
+                  message:
+                    type: string
+                    example: "Win updated"
+                  data:
+                    $ref: "#/components/schemas/Win"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Wins]
+      summary: Delete a win
+      operationId: deleteWin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Win UUID
+          schema:
+            type: string
+            format: uuid
+        - name: x-user-id
+          in: header
+          required: true
+          description: User UUID injected by auth middleware
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Win deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Win deleted"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
 components:
   schemas:
     MessageResponse:
@@ -407,6 +641,27 @@ components:
         due_date:
           type: string
           format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    Win:
+      type: object
+      required: [id, id_user, title, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        id_user:
+          type: string
+          format: uuid
+          description: Owner of the win
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
         created_at:
           type: string
           format: date-time
