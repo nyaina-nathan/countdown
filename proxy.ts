@@ -6,9 +6,13 @@ const proxy = async (req: NextRequest) => {
     const userId = token ? await verifyAndGetUserId(token) : null;
     const { pathname } = req.nextUrl;
 
+    if (pathname === '/') {
+        return NextResponse.next();
+    }
+
     if (pathname === '/login') {
         if (userId) {
-            return NextResponse.redirect(new URL('/', req.url));
+            return NextResponse.redirect(new URL('/dashboard', req.url));
         }
         return NextResponse.next();
     }
