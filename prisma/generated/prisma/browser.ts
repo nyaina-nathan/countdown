@@ -27,3 +27,8 @@ export type countdowns = Prisma.countdownsModel
  * 
  */
 export type users = Prisma.usersModel
+/**
+ * Model wins
+ * 
+ */
+export type wins = Prisma.winsModel
