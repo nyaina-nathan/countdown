@@ -82,7 +82,7 @@ const HomePage = async () => {
               Count your dreams
             </p>
             <h1 className="mt-4 font-sans text-[2.75rem] leading-none md:text-[4rem]">
-              Never lose track of what you are waiting for.
+              Never lose track of what matters to you
             </h1>
             <p className="mt-6 font-sans text-[1.25rem] leading-snug text-[#4B5563]">
               Countdown keeps all of your important dates in one place. Create
@@ -169,27 +169,43 @@ const HomePage = async () => {
           <section className="card-sega mt-16 flex flex-col items-start gap-6 md:mt-24 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="font-sans text-[1.6875rem] leading-none">
-                Ready to start counting?
+                Developer's note
               </h2>
               <p className="mt-2 font-mono text-xs uppercase tracking-widest text-[#6B7280]">
-                Create your first countdown in under a minute.
+                Dear stranger,
+                </p>
+                <p className='text-[#6B7280]'>
+            I would really love to tell you all that we will all live forever 
+            and we will all live the lives we all dreamed of. 
+            But the truth is, if you just let the time slide 
+            and change absolutely nothing you will just wake up on
+            a random tuesday and realize you are still the same person you were. 
+            I once heard  “It is so easy to do nothing” when I was in my freshman year. 
+            It stuck with me for a very long time, 
+            I kept it in my mind thinking that it would never be me 
+            and that I would get stupidly rich, be shredded as … and all this. 
+            But guess what? I am about to graduate soon and nothing happened at all, 
+            I am still the same person. Yes, small progress here and there, 
+            but in the end I did fail all my so-called goals because 
+            I took everything for granted and especially…time. 
+            <br></br>
+            Being rich in 5 years is so easy to say. 
+            But the thing i ignored is i had to fully live all these 1826 days and that will
+            count for the 5 years. So please dear stranger, do me a favor, set yourself a cool goal,
+            a deadline and promise me (yes a random indie dev) to FULLY live every day until you reach that deadline. 
+            And not just on that goal, but whether you use my app or not, 
+            give yourself a try, pursue those dreams of yours, that degree you always dreamed of, 
+            tell all your loved ones that you do love them, do that one thing you always wanted to do, 
+            that “one day i will finally do it” do it today or tomorrow. 
+            <br></br>One day you won’t be able to do it anymore. 
+            One day we will all leave this world and there will only be one thing that will matter at all and 
+            it is not how many cars you have, in which country did i end up, what job am i working at, what did i
+              fail doing.
+            None of that stranger, it just comes down to <strong> “Was I happy?”</strong>
+
               </p>
             </div>
-            {isLoggedIn ? (
-              <Link
-                href="/dashboard"
-                className="btn-sega shrink-0 bg-primary text-white"
-              >
-                Go to dashboard
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                className="btn-sega shrink-0 bg-primary text-white"
-              >
-                Get started
-              </Link>
-            )}
+            
           </section>
         </div>
       </main>
