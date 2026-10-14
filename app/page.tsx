@@ -28,6 +28,19 @@ const steps = [
   },
 ];
 
+const winFeatures = [
+  {
+    number: '01',
+    title: 'Log a win',
+    body: 'Capture the things you accomplished, big or small, with a title and an optional description.',
+  },
+  {
+    number: '02',
+    title: 'Revisit your progress',
+    body: 'Browse your wins newest first, page by page, and update or remove any entry at any time.',
+  },
+];
+
 const HomePage = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get('user_jwt')?.value;
@@ -113,6 +126,40 @@ const HomePage = async () => {
                   </h3>
                   <p className="mt-2 font-sans text-[1.0625rem] leading-snug text-[#4B5563]">
                     {step.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-16 md:mt-24">
+            <h2 className="font-sans text-[2.1875rem] leading-none">
+              Celebrate your wins
+            </h2>
+            <p className="mt-4 max-w-3xl font-sans text-[1.25rem] leading-snug text-[#4B5563]">
+              Countdowns look ahead, wins look back. Keep a running list of
+              what you have achieved along the way, so every milestone is
+              written down and easy to find.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+              {winFeatures.map((feature, i) => (
+                <div
+                  key={feature.number}
+                  className="card-sega"
+                  style={{
+                    animation: 'fade-up 0.6s cubic-bezier(0.16,1,0.3,1)',
+                    animationDelay: `${i * 80}ms`,
+                    animationFillMode: 'both',
+                  }}
+                >
+                  <span className="badge-sega bg-secondary text-ink">
+                    {feature.number}
+                  </span>
+                  <h3 className="mt-4 font-sans text-[1.6875rem] leading-tight">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-2 font-sans text-[1.0625rem] leading-snug text-[#4B5563]">
+                    {feature.body}
                   </p>
                 </div>
               ))}
